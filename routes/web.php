@@ -1,7 +1,36 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PostController;
 use Illuminate\Support\Facades\Route;
+use App\Models\User;
+use App\Models\Post;
+
+Route::group(['prefix'=>'admin'], function() {
+   
+    Route::get('/hola', function ($nom, $professio = null) {
+        return 'Hola mon';
+    })->name('hola');
+    
+});
+
+
+Route::get('/hola/{nom}/{professio?}', function ($nom, $professio = null) {
+    return 'Hola '.$nom." Professió ".$professio;
+})->whereAlpha('nom')->name('salutacio');
+
+
+Route::get('/perfil/{user}', function (User $user) {
+  return view('perfil', ['user' => $user]);
+});
+
+Route::get('/usuaris/{user}', function (User $user) {
+    return $user;
+});
+
+
+Route::resource('/post', PostController::class);
+
 
 Route::get('/', function () {
     return view('welcome');

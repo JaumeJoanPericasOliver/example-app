@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Rules\Uppercase;
 
 class GuardarPostRequest extends FormRequest
 {
@@ -22,7 +23,7 @@ class GuardarPostRequest extends FormRequest
     public function rules(): array
     {
         return [
-           'title' => 'Uppercase|unique:posts|min:5|max:255',
+           'title' => ['required','unique:posts','min:5','max:255', new Uppercase],
            'url_clean' => 'required|unique:posts|min:5|max:255',
            'content' => 'required|min:5|max:255',
         ];

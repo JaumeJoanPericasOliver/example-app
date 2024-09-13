@@ -67,21 +67,18 @@ class PostController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Posts $post)
+    public function update(Request $request, Post $post)
     {
-        $post->title = $request->title;
-        $post->url_clean = $request->url_clean;
-        $post->content = $request->content;
-        $post->update();
-    
+        $post->update($request->all());
         return back();
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Post $post)
     {
-        //
+        $post->delete();
+        return back();
     }
 }

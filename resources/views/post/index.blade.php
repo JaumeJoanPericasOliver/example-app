@@ -7,7 +7,13 @@
         <td>{{ $post->content }}</td>
         <td>{{ $post->created_at }}</td>
         <td>{{ $post->updated_at }}</td>
-        <td></td>
+        <td>
+            <form action="{{route('post.destroy' , $post->id)}}" method="POST" >
+                @method('DELETE')
+                @csrf
+                <button type="submit" >Delete</button>
+            </form>
+        </td>
     </tr>
 @endforeach
 </table>

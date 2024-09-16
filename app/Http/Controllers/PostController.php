@@ -16,7 +16,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::all();
+        $posts = Post::paginate(2);
         return view('post.index', ['posts' => $posts]);
     }
 
@@ -44,7 +44,7 @@ class PostController extends Controller
         $post->user_id = User::all()->random()->id;
         $post->save();
 
-        return back();
+        return back()->with('status', '<h1>Post creat correctament</h1>');
 
     }
 

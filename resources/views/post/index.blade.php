@@ -1,19 +1,21 @@
-<table>
-@foreach ($posts as $post)
-    <tr  >
-        <td>{{ $post->id }}</td>
-        <td>{{ $post->title }}</td>
-        <td>{{ $post->posted }}</td>
-        <td>{{ $post->content }}</td>
-        <td>{{ $post->created_at }}</td>
-        <td>{{ $post->updated_at }}</td>
-        <td>
-            <form action="{{route('post.destroy' , $post->id)}}" method="POST" >
-                @method('DELETE')
-                @csrf
-                <button type="submit" >Delete</button>
-            </form>
-        </td>
-    </tr>
-@endforeach
-</table>
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+            {{ __('Llistat de posts') }}
+        </h2>
+    </x-slot>
+
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 text-gray-900 dark:text-gray-100">
+                    @each('components.cards-posts', $posts, 'post')
+
+                    {{ $posts->links() }}
+                </div>
+            </div>
+        </div>
+    </div>
+</x-app-layout>
+
+

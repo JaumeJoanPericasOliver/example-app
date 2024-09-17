@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use App\Http\Requests\GuardarPostRequest;
 use App\Models\Post;
 use App\Models\User;
+use App\Models\Category;
+use App\Models\PostImage;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\GuardarPostRequest;
 
 
 class PostController extends Controller
@@ -16,7 +20,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::paginate(2);
+        $posts = Post::with(["user" , "image" ])->paginate(4);
         return view('post.index', ['posts' => $posts]);
     }
 
@@ -26,9 +30,8 @@ class PostController extends Controller
     public function create()
     {
 
-        $users = DB::table('users')->where('role', 'admin')->get();
-
-        return view('post.create');
+        $categories = Category::pluck('id', 'title');
+        return view('post.create', ['categories' => $categories]);
     }
 
     /**
@@ -41,7 +44,9 @@ class PostController extends Controller
         $post->title = $request->title;
         $post->url_clean = $request->url_clean;
         $post->content = $request->content;
-        $post->user_id = User::all()->random()->id;
+        $post->category_id = $request->categories_id;
+        $post->posted = $request->posted;
+        $post->user_id = Auth::user()->id;
         $post->save();
 
         return back()->with('status', '<h1>Post creat correctament</h1>');
@@ -81,4 +86,21 @@ class PostController extends Controller
         $post->delete();
         return back();
     }
+
+
+    public function image(Request $request, Post $post){
+        $request->validate([
+          'image' => 'required|max:10240',
+        ]);
+      
+        $filename = time().".".$request->image->extension();
+      
+        $request->image->move(public_path('images'), $filename);
+      
+        PostImage::create(['image' => $filename, 'post_id' => $post->id]);
+
+        return redirect('post')->with('status', 'Imagen cargada con exito');
+    }
+
+
 }

@@ -23,8 +23,23 @@
                             <x-input-error :messages="$errors->get('url_clean')" class="mt-2" />
                         </div>
                         <div>
+                            <label for="categories_id" >Categories</label>
+                            <select name="categories_id" class="mt-1 block w-full"  >
+                              @foreach ($categories as $title => $id)
+                                <option value="{{$id}}">{{$title}}</option>
+                              @endforeach
+                            </select>
+                        </div>
+                        <div>
+                            <label for="posted" class="form-label">Publicat</label>
+                            <select name="posted" class="mt-1 block w-full" >
+                                <option value="yes">si</option>
+                                <option value="not">no</option>
+                            </select>
+                        </div>
+                        <div>
                             <x-input-label for="content" :value="__('Contingut')" />
-                            <textarea name="content" col="3" class="mt-1 block w-full" ></textarea>
+                            <textarea class="form-control" name="content"  id="editor" rows="3"></textarea>
                             <x-input-error :messages="$errors->get('content')" class="mt-2" />
                         </div>
                         <input type="submit" value="Crear" class="inline-flex items-center px-4 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white dark:text-gray-800 uppercase tracking-widest hover:bg-gray-700 dark:hover:bg-white focus:bg-gray-700 dark:focus:bg-white active:bg-gray-900 dark:active:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150" >

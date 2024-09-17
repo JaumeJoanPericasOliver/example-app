@@ -1,10 +1,11 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\PostController;
-use Illuminate\Support\Facades\Route;
-use App\Models\User;
 use App\Models\Post;
+use App\Models\User;
+use Illuminate\Support\Facades\Route;
+use App\Http\Middleware\CheckRolAdmin;
+use App\Http\Controllers\PostController;
+use App\Http\Controllers\ProfileController;
 
 Route::group(['prefix'=>'admin'], function() {
    
@@ -29,8 +30,6 @@ Route::get('/usuaris/{user}', function (User $user) {
 });
 
 
-Route::resource('/post', PostController::class);
-
 
 Route::get('/', function () {
     return view('welcome');
@@ -41,9 +40,14 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
+
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::resource('/post', PostController::class)->middleware(CheckRolAdmin::class);
+    Route::post('/post/{post}/edit/images',[PostsController::class, 'image'])->name('post.image');
+
 });
 
 require __DIR__.'/auth.php';

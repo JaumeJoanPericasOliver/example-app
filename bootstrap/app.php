@@ -1,19 +1,32 @@
 <?php
 
-use App\Http\Middleware\CheckRolAdmin;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
-        web: __DIR__.'/../routes/web.php',
-        commands: __DIR__.'/../routes/console.php',
-        health: '/up',
+        using: function () {
+            Route::middleware('api')
+               ->prefix('api')
+               ->group(base_path('routes/api.php'));
+            Route::middleware('web')
+               ->group(base_path('routes/web.php'));
+            },
     )
     ->withMiddleware(function (Middleware $middleware) {
-        $middleware->append(CheckRolAdmin::class);
+        $middleware->alias([
+            'CheckRolAdmin' => \App\Http\Middleware\CheckRolAdmin::class,
+        ]);
+        $middleware->api("throttle:api");
+
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        //
+        $exceptions->render(function (NotFoundHttpException $e, Request $request) {
+            if ($request->is('api/*')) {
+                return response()->json([
+                    'message' => 'No hem trobat elements.'
+                ], 404);
+            }
+        });
     })->create();

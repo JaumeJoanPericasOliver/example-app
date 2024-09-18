@@ -45,8 +45,8 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::resource('/post', PostController::class)->middleware(CheckRolAdmin::class);
-    Route::post('/post/{post}/edit/images',[PostsController::class, 'image'])->name('post.image');
+    Route::resource('/post', PostController::class)->middleware('CheckRolAdmin');
+    Route::post('/post/{post}/edit/images',[PostController::class, 'image'])->name('post.image');
 
 });
 

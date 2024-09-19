@@ -25,8 +25,6 @@ class DatabaseSeeder extends Seeder
         $AdminUser->password = Hash::make('12345678');
         $AdminUser->save();
         
-        User::factory(5)->create();
-
         Post::factory(5)->create();
 
     }
